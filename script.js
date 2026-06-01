@@ -1,12 +1,21 @@
-// 1. Identificamos el formulario y la sección donde se muestran los poemas
+// 1. Configuración de Firebase con tus credenciales reales
+const firebaseConfig = {
+    apiKey: "TU_API_KEY_REAL",
+    authDomain: "TU_AUTH_DOMAIN_REAL",
+    databaseURL: "TU_DATABASE_URL_REAL",
+    projectId: "TU_PROJECT_ID_REAL",
+    storageBucket: "TU_STORAGE_BUCKET_REAL",
+    messagingSenderId: "TU_MESSAGING_SENDER_ID_REAL",
+    appId: "TU_APP_ID_REAL"
+};
+
+// Inicializamos la base de datos global de Google
+firebase.initializeApp(firebaseConfig);
+const baseDeDatos = firebase.database();
+
 const formulario = document.querySelector('form');
 const contenedorPoemas = document.getElementById('contenedor-poemas');
 
-// 2. Al cargar la página, recuperamos los poemas guardados en LocalStorage
-// Si no hay ninguno, creamos una lista vacía []
-let listaPoemas = JSON.parse(localStorage.getItem('misPoemas')) || [];
-
-// 3. Función única para pintar un poema en la pantalla de la bitácora
 function renderizarPoema(autor, titulo, contenido) {
     const nuevoArticulo = document.createElement('article');
     nuevoArticulo.innerHTML = `
@@ -17,35 +26,30 @@ function renderizarPoema(autor, titulo, contenido) {
     contenedorPoemas.prepend(nuevoArticulo);
 }
 
-// 4. Pintamos todos los poemas que ya estaban guardados al abrir la página
-listaPoemas.forEach(poema => {
+// ESCUCHADOR GLOBAL: Al cargar la página o cuando alguien publique, descarga el poema automáticamente
+baseDeDatos.ref('poemas').on('child_added', function(snapshot) {
+    const poema = snapshot.val();
     renderizarPoema(poema.autor, poema.titulo, poema.contenido);
 });
 
-// 5. Escuchamos el formulario cuando alguien envía (submit) una nueva publicación
 formulario.addEventListener('submit', function(evento) {
-    evento.preventDefault(); // Frenamos el reinicio de la página
+    evento.preventDefault();
 
     const autor = document.getElementById('autor').value;
     const titulo = document.getElementById('titulo').value;
     const contenido = document.getElementById('contenido').value;
 
-    // Validación de campos vacíos
     if (autor === '' || titulo === '' || contenido === '') {
         alert('Por favor, llena todos los campos antes de continuar publicando escritor');
         return;
     }
 
-    // A) Pintamos el nuevo poema en la pantalla de inmediato
-    renderizarPoema(autor, titulo, contenido);
+    // MANDAR A LA NUBE: Guardamos los datos en la base central de Firebase
+    baseDeDatos.ref('poemas').push({
+        autor: autor,
+        titulo: titulo,
+        contenido: contenido
+    });
 
-    // B) Creamos un objeto con los datos y lo metemos a nuestra lista en memoria
-    const nuevoPoemaObjeto = { autor, titulo, contenido };
-    listaPoemas.push(nuevoPoemaObjeto);
-
-    // C) Guardamos la lista actualizada en el LocalStorage convirtiéndola a texto
-    localStorage.setItem('misPoemas', JSON.stringify(listaPoemas));
-
-    // D) Limpiamos las cajas de texto del formulario
     formulario.reset();
 });
