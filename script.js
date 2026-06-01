@@ -1,21 +1,23 @@
-// 1. Configuración de Firebase con tus credenciales reales
+// 1. Configuración de Firebase con tus credenciales reales de Gael
 const firebaseConfig = {
-    apiKey: "TU_API_KEY_REAL",
-    authDomain: "TU_AUTH_DOMAIN_REAL",
-    databaseURL: "TU_DATABASE_URL_REAL",
-    projectId: "TU_PROJECT_ID_REAL",
-    storageBucket: "TU_STORAGE_BUCKET_REAL",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID_REAL",
-    appId: "TU_APP_ID_REAL"
+  apiKey: "AIzaSyDf-WrR7BvBlQbdHGJOMO8YmaMxM2HnyZI",
+  authDomain: "bitacora-poetica-gael.firebaseapp.com",
+  databaseURL: "https://bitacora-poetica-gael-default-rtdb.firebaseio.com",
+  projectId: "bitacora-poetica-gael",
+  storageBucket: "bitacora-poetica-gael.firebasestorage.app",
+  messagingSenderId: "433915859922",
+  appId: "1:433915859922:web:d06955f46a7f71ca5aee0b"
 };
 
-// Inicializamos la base de datos global de Google
+// Inicializamos la base de datos global de Google Firebase
 firebase.initializeApp(firebaseConfig);
 const baseDeDatos = firebase.database();
 
+// 2. Identificamos los elementos del HTML
 const formulario = document.querySelector('form');
 const contenedorPoemas = document.getElementById('contenedor-poemas');
 
+// 3. Función para pintar un poema en la pantalla
 function renderizarPoema(autor, titulo, contenido) {
     const nuevoArticulo = document.createElement('article');
     nuevoArticulo.innerHTML = `
@@ -26,12 +28,13 @@ function renderizarPoema(autor, titulo, contenido) {
     contenedorPoemas.prepend(nuevoArticulo);
 }
 
-// ESCUCHADOR GLOBAL: Al cargar la página o cuando alguien publique, descarga el poema automáticamente
+// 4. OYENTE EN TIEMPO REAL: Descarga en automático los poemas existentes y nuevos para todos los usuarios
 baseDeDatos.ref('poemas').on('child_added', function(snapshot) {
     const poema = snapshot.val();
     renderizarPoema(poema.autor, poema.titulo, poema.contenido);
 });
 
+// 5. Captura del formulario al publicar
 formulario.addEventListener('submit', function(evento) {
     evento.preventDefault();
 
