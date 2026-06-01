@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <meta charset="UTF-8">
+        <title>Bitacora</title>
+    </head>
+    <body>
+        <header>
+            <h1>Bitacora de Versos y Vivencias</h1>
+            <p>Un espacio para compartir la poesia y las experiencias.</p>
+
+        </header> 
+        <main>
+            <section id="contenedor-poemas">
+    <article>
+        <h2>A la fecha de hoy</h2>
+        <p><strong>Escrito por:</strong>Gael</p>
+        <p>A la fecha de hoy, y siendo esta la hora aun no se que hiciste, no se que me hiciste.</p>
+    </article>
+</section>
+            <section>
+                <h2>Compartir nuevo poema</h2>
+                <form>
+                    <label for="autor">Tu nombre/Pseudonimo:</label>
+                   <input type="text" id="autor" name="autor" placeholder="Escribe tu nombre: ">
+
+                   <label for="titulo">Titulo de tu obra: </label>
+                   <input type="text" id="titulo" name="titulo" placeholder="Escribe tu titulo aqui: ">
+
+                   <label for="contenido">Tu poesia o experiencia: </label>
+                   <textarea id="contenido" name="contenido" rows="20" placeholder="Deja fluir tus textos: "></textarea>
+
+                    <button type="submit">Publicar en la Bitacora</button>
+                    </form>
+        </main> 
+        <script src="script.js"></script>
+    </body> 
+</html>
